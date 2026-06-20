@@ -1,0 +1,8 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>YouTube SEO Pro</title><link rel="stylesheet" href="style.css"></head><body>
+<header><b class="dot">●</b> YOUTUBE SEO PRO <span>순위 · SEO 점수 · 키워드 분석</span></header>
+<main>
+<section class="grid cards"><div><small>검색 순위</small><h2 id="rankBox">-</h2><p>최대 100위 확인</p></div><div><small>SEO 점수</small><h2 id="scoreBox">-</h2><p>제목/설명/태그 기준</p></div><div><small>API 상태</small><h2 id="apiBox">확인 전</h2><p>Render 서버 연결</p></div></section>
+<section class="panel"><h3>🔍 키워드 순위 확인</h3><input id="keyword" placeholder="키워드 입력 예: 먹방 라이브"><input id="video" placeholder="영상 URL 또는 Video ID"><select id="region"><option>KR</option><option>US</option><option>JP</option></select><button onclick="runAll()">분석 시작</button></section>
+<section class="grid"><div class="panel"><h3>📈 검색 결과 TOP 20</h3><div id="results" class="list muted">아직 검색 전입니다.</div></div><div class="panel"><h3>✅ SEO 체크</h3><div id="checks" class="list muted">아직 분석 전입니다.</div></div></section>
+<section class="panel"><h3>🏷️ 키워드 아이디어</h3><div id="ideas" class="tags muted">키워드를 입력하고 분석하세요.</div></section>
+</main><script src="script.js"></script></body></html>

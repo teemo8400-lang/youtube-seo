@@ -1,0 +1,20 @@
+const $ = id => document.getElementById(id);
+function videoId(input){const v=input.trim(); if(/^[a-zA-Z0-9_-]{11}$/.test(v))return v; const m=v.match(/(?:v=|youtu\.be\/|shorts\/|live\/)([a-zA-Z0-9_-]{11})/); return m?m[1]:v;}
+async function getJSON(url){const r=await fetch(url); const d=await r.json(); if(!r.ok) throw new Error(d.error||'오류'); return d;}
+async function runAll(){
+  const keyword=$('keyword').value.trim(), video=$('video').value.trim(), region=$('region').value;
+  if(!keyword||!video) return alert('키워드와 영상 URL/ID를 입력하세요.');
+  $('apiBox').textContent='연결 중'; $('rankBox').textContent='...'; $('scoreBox').textContent='...';
+  try{
+    const vid=videoId(video);
+    const rank=await getJSON(`/api/search-rank?keyword=${encodeURIComponent(keyword)}&videoId=${encodeURIComponent(vid)}&regionCode=${region}`);
+    $('apiBox').textContent='정상'; $('rankBox').textContent=rank.found ? rank.rank+'위' : '100위 밖';
+    $('results').innerHTML=rank.results.map(x=>`<div class="item"><b>${x.rank}위</b> ${x.title}<br><small>${x.channelTitle}</small></div>`).join('') || '결과 없음';
+    const seo=await getJSON(`/api/video-seo?keyword=${encodeURIComponent(keyword)}&videoId=${encodeURIComponent(vid)}`);
+    $('scoreBox').textContent=seo.score+'점';
+    $('checks').innerHTML=seo.checks.map(c=>`<div class="item"><b class="${c.ok?'ok':'bad'}">${c.ok?'통과':'개선'}</b> ${c.name}<br><small>${c.tip}</small></div>`).join('');
+    const ideas=await getJSON(`/api/keyword-ideas?keyword=${encodeURIComponent(keyword)}&regionCode=${region}`);
+    $('ideas').innerHTML=ideas.ideas.map(i=>`<span>${i.word} ${i.count}</span>`).join('') || '아이디어 없음';
+  }catch(e){$('apiBox').textContent='오류'; alert(e.message);}
+}
+fetch('/api/health').then(()=>{$('apiBox').textContent='대기'}).catch(()=>{$('apiBox').textContent='서버 오류'});
