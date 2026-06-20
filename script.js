@@ -52,16 +52,23 @@ async function searchLive() {
 
     $("results").innerHTML = data.results.map(v => `
       <div class="card">
-        <div class="rank">${v.rank}위</div>
+        <div class="rank">${v.rank}</div>
         <img src="${v.thumbnail}" class="thumb">
         <div class="info">
           <h3>${v.title}</h3>
           <p>채널명: ${v.channelTitle}</p>
-          <p>동접자 수: ${Number(v.viewers).toLocaleString()}명</p>
           <a href="${v.liveUrl}" target="_blank">라이브 보기</a>
+        </div>
+        <div class="viewers">
+          ${Number(v.viewers).toLocaleString()}명
         </div>
       </div>
     `).join("");
+
+    const now = new Date();
+    if ($("clock")) {
+      $("clock").textContent = now.toLocaleTimeString("ko-KR");
+    }
 
   } catch (e) {
     $("status").textContent = "검색 실패";
@@ -89,5 +96,9 @@ window.onload = () => {
   if (localStorage.getItem("sitePassword")) {
     $("loginBox").style.display = "none";
     $("appBox").style.display = "block";
+  }
+
+  if ($("clock")) {
+    $("clock").textContent = new Date().toLocaleTimeString("ko-KR");
   }
 };
