@@ -8,19 +8,27 @@
 <body>
   <h1>YouTube Live SEO Checker</h1>
 
-  <div class="box">
-    <input id="keyword" placeholder="라이브 키워드 입력 예: 먹방, 롤, 음악">
-    <select id="region">
-      <option value="KR">KR 한국</option>
-      <option value="US">US 미국</option>
-      <option value="JP">JP 일본</option>
-    </select>
-    <button onclick="startSearch()">검색 시작</button>
-    <button onclick="stopSearch()">자동 새로고침 중지</button>
+  <div id="loginBox" class="box">
+    <input id="password" type="password" placeholder="비밀번호 입력">
+    <button onclick="login()">접속</button>
   </div>
 
-  <p id="status">대기 중</p>
-  <div id="results"></div>
+  <div id="appBox" style="display:none;">
+    <div class="box">
+      <input id="keyword" placeholder="라이브 키워드 입력 예: 먹방, 롤, 음악">
+      <select id="region">
+        <option value="KR">KR 한국</option>
+        <option value="US">US 미국</option>
+        <option value="JP">JP 일본</option>
+      </select>
+      <button onclick="startSearch()">검색 시작</button>
+      <button onclick="stopSearch()">자동 새로고침 중지</button>
+      <button onclick="logout()">로그아웃</button>
+    </div>
+
+    <p id="status">대기 중</p>
+    <div id="results"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
