@@ -1,1 +1,48 @@
-*{box-sizing:border-box}body{margin:0;background:#0d0d0f;color:#eee;font-family:Arial,'Noto Sans KR',sans-serif}header{height:58px;border-bottom:1px solid #222;display:flex;align-items:center;padding:0 22px;font-weight:800;gap:10px}header span{color:#888;font-size:13px;font-weight:500}.dot{color:#ff2020}main{padding:18px;max-width:1180px;margin:auto}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.cards{grid-template-columns:repeat(3,1fr)}.cards>div,.panel{background:#171719;border:1px solid #2b2b2e;border-radius:10px;padding:18px}.cards h2{font-size:34px;margin:10px 0 2px}.cards small{color:#aaa}.cards p,.muted{color:#777}input,select,button{background:#232326;color:#fff;border:1px solid #444;border-radius:8px;padding:13px;margin:6px 4px 6px 0}input{min-width:280px}button{background:#ff1f1f;border:0;font-weight:800;cursor:pointer}.list{display:flex;flex-direction:column;gap:9px}.item{background:#111;border:1px solid #292929;padding:10px;border-radius:8px}.ok{color:#34d058}.bad{color:#ff5c5c}.tags span{display:inline-block;background:#26262a;border:1px solid #3a3a3f;border-radius:20px;padding:8px 12px;margin:5px}@media(max-width:800px){.grid,.cards{grid-template-columns:1fr}input{width:100%;min-width:0}}
+const $ = (id) => document.getElementById(id);
+
+function videoId(input) {
+  const v = input.trim();
+  const m = v.match(/(?:v=|youtu\.be\/|shorts\/|live\/)([a-zA-Z0-9_-]{11})/);
+  if (m) return m[1];
+  return v;
+}
+
+async function runAll() {
+  alert("검색 시작");
+
+  const keyword = $("keyword").value.trim();
+  const video = $("video").value.trim();
+  const region = $("region").value;
+
+  if (!keyword || !video) {
+    alert("키워드와 영상 URL을 입력하세요.");
+    return;
+  }
+
+  $("apiBox").textContent = "검색 중...";
+
+  try {
+    const vid = videoId(video);
+    const res = await fetch(`/api/search-rank?keyword=${encodeURIComponent(keyword)}&videoId=${encodeURIComponent(vid)}&regionCode=${region}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || "API 오류");
+      return;
+    }
+
+    $("apiBox").textContent = "검색 완료";
+    $("rankBox").textContent = data.found ? `${data.rank}위` : "50위 안에 없음";
+
+    $("results").innerHTML = data.results.map(x => `
+      <div>
+        <b>${x.rank}위</b> ${x.title}<br>
+        <small>${x.channelTitle}</small>
+      </div>
+    `).join("");
+
+  } catch (e) {
+    $("apiBox").textContent = "오류";
+    alert(e.message);
+  }
+}
