@@ -1,8 +1,308 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>YouTube SEO Pro</title><link rel="stylesheet" href="style.css"></head><body>
-<header><b class="dot">●</b> YOUTUBE SEO PRO <span>순위 · SEO 점수 · 키워드 분석</span></header>
-<main>
-<section class="grid cards"><div><small>검색 순위</small><h2 id="rankBox">-</h2><p>최대 100위 확인</p></div><div><small>SEO 점수</small><h2 id="scoreBox">-</h2><p>제목/설명/태그 기준</p></div><div><small>API 상태</small><h2 id="apiBox">확인 전</h2><p>Render 서버 연결</p></div></section>
-<section class="panel"><h3>🔍 키워드 순위 확인</h3><input id="keyword" placeholder="키워드 입력 예: 먹방 라이브"><input id="video" placeholder="영상 URL 또는 Video ID"><select id="region"><option>KR</option><option>US</option><option>JP</option></select><button onclick="runAll()">분석 시작</button></section>
-<section class="grid"><div class="panel"><h3>📈 검색 결과 TOP 20</h3><div id="results" class="list muted">아직 검색 전입니다.</div></div><div class="panel"><h3>✅ SEO 체크</h3><div id="checks" class="list muted">아직 분석 전입니다.</div></div></section>
-<section class="panel"><h3>🏷️ 키워드 아이디어</h3><div id="ideas" class="tags muted">키워드를 입력하고 분석하세요.</div></section>
-</main><script src="script.js"></script></body></html>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background: radial-gradient(circle at top right, #ffd1df, #fff1f6 45%, #ffe5ee);
+  color: #3d2630;
+  min-height: 100vh;
+}
+
+.bg-hearts::before {
+  content: "♡ ♡ ✨ ♡ ♡";
+  position: fixed;
+  top: 25px;
+  left: 40px;
+  font-size: 42px;
+  color: rgba(255, 92, 135, 0.25);
+  letter-spacing: 35px;
+  pointer-events: none;
+}
+
+.page {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+  padding: 28px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.badge {
+  display: inline-block;
+  background: white;
+  color: #ff4f84;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  box-shadow: 0 8px 25px rgba(255, 86, 130, 0.18);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 26px 0;
+}
+
+.play {
+  width: 100px;
+  height: 70px;
+  background: linear-gradient(135deg, #ff3974, #ff6d9c);
+  border-radius: 22px;
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: 38px;
+  box-shadow: 0 12px 30px rgba(255, 53, 110, 0.3);
+}
+
+h1 {
+  margin: 0;
+  font-size: 46px;
+  color: #ff3f79;
+  text-shadow: 0 4px 0 rgba(255,255,255,0.8);
+}
+
+header p {
+  margin: 4px 0 0;
+  color: #ff7fa5;
+  letter-spacing: 10px;
+  font-weight: 800;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 145, 175, 0.45);
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 18px 45px rgba(255, 98, 145, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.login {
+  max-width: 480px;
+}
+
+label {
+  display: block;
+  color: #ff4f84;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.search-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 170px;
+  gap: 14px;
+}
+
+input, select {
+  height: 54px;
+  border: 2px solid #ffd0dc;
+  border-radius: 16px;
+  padding: 0 18px;
+  font-size: 16px;
+  background: white;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: #ff5e8d;
+}
+
+button {
+  height: 54px;
+  border: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ff3f79, #ff6f9d);
+  color: white;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(255, 65, 120, 0.25);
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+.notice {
+  margin-top: 16px;
+  background: #fff0f5;
+  color: #ff5d8c;
+  text-align: center;
+  border-radius: 14px;
+  padding: 12px;
+  font-weight: 800;
+}
+
+.sub-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.sub-buttons button {
+  background: #ff9fbd;
+  height: 42px;
+  font-size: 14px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 26px 0 14px;
+}
+
+.title-row h2 {
+  color: #ff3f79;
+}
+
+#status {
+  background: #ffe2eb;
+  color: #ff4f84;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 70px 170px 1fr 130px;
+  gap: 16px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid #ffc9d8;
+  border-radius: 22px;
+  padding: 14px;
+  box-shadow: 0 10px 25px rgba(255, 99, 140, 0.12);
+}
+
+.rank {
+  font-size: 28px;
+  font-weight: 900;
+  color: #ff4f84;
+  text-align: center;
+}
+
+.rank::before {
+  content: "👑";
+  display: block;
+  font-size: 22px;
+}
+
+.thumb {
+  width: 170px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.info h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.info p {
+  margin: 5px 0;
+  color: #7c5261;
+  font-weight: 700;
+}
+
+.info a {
+  display: inline-block;
+  margin-top: 6px;
+  color: #ff3f79;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.viewers {
+  text-align: right;
+  color: #ff3f79;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.right {
+  position: sticky;
+  top: 28px;
+  height: fit-content;
+}
+
+.update-card {
+  background: rgba(255,255,255,0.8);
+  border-radius: 26px;
+  padding: 22px;
+  text-align: center;
+  color: #ff4f84;
+  font-weight: 800;
+  box-shadow: 0 15px 35px rgba(255, 94, 135, 0.16);
+}
+
+.update-card strong {
+  font-size: 24px;
+}
+
+.character-card {
+  margin-top: 28px;
+  position: relative;
+  text-align: center;
+}
+
+.character-card img {
+  width: 100%;
+  max-height: 620px;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 30px rgba(255, 86, 130, 0.25));
+}
+
+.speech {
+  margin-top: -30px;
+  background: white;
+  color: #ff4f84;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.5;
+  padding: 24px;
+  border-radius: 50px;
+  box-shadow: 0 12px 30px rgba(255, 91, 135, 0.18);
+}
+
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .right {
+    position: static;
+  }
+
+  .search-row {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    grid-template-columns: 50px 110px 1fr;
+  }
+
+  .viewers {
+    grid-column: 3;
+    text-align: left;
+  }
+
+  .thumb {
+    width: 110px;
+    height: 70px;
+  }
+}
