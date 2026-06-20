@@ -1,9 +1,29 @@
 const $ = (id) => document.getElementById(id);
 let timer = null;
 
+function login() {
+  const pw = $("password").value.trim();
+  if (!pw) {
+    alert("비밀번호를 입력하세요.");
+    return;
+  }
+
+  localStorage.setItem("sitePassword", pw);
+  $("loginBox").style.display = "none";
+  $("appBox").style.display = "block";
+}
+
+function logout() {
+  localStorage.removeItem("sitePassword");
+  stopSearch();
+  $("appBox").style.display = "none";
+  $("loginBox").style.display = "block";
+}
+
 async function searchLive() {
   const keyword = $("keyword").value.trim();
   const region = $("region").value;
+  const password = localStorage.getItem("sitePassword");
 
   if (!keyword) {
     alert("키워드를 입력하세요.");
@@ -13,12 +33,18 @@ async function searchLive() {
   $("status").textContent = "검색 중...";
 
   try {
-    const res = await fetch(`/api/live-search?keyword=${encodeURIComponent(keyword)}&regionCode=${region}`);
+    const res = await fetch(`/api/live-search?keyword=${encodeURIComponent(keyword)}&regionCode=${region}`, {
+      headers: {
+        "x-site-password": password
+      }
+    });
+
     const data = await res.json();
 
     if (!res.ok) {
-      $("status").textContent = "오류 발생";
+      $("status").textContent = data.error || "오류 발생";
       alert(data.error || "API 오류");
+      logout();
       return;
     }
 
@@ -58,3 +84,10 @@ function stopSearch() {
   timer = null;
   $("status").textContent = "자동 새로고침 중지됨";
 }
+
+window.onload = () => {
+  if (localStorage.getItem("sitePassword")) {
+    $("loginBox").style.display = "none";
+    $("appBox").style.display = "block";
+  }
+};
