@@ -1,48 +1,60 @@
 const $ = (id) => document.getElementById(id);
+let timer = null;
 
-function videoId(input) {
-  const v = input.trim();
-  const m = v.match(/(?:v=|youtu\.be\/|shorts\/|live\/)([a-zA-Z0-9_-]{11})/);
-  if (m) return m[1];
-  return v;
-}
-
-async function runAll() {
-  alert("검색 시작");
-
+async function searchLive() {
   const keyword = $("keyword").value.trim();
-  const video = $("video").value.trim();
   const region = $("region").value;
 
-  if (!keyword || !video) {
-    alert("키워드와 영상 URL을 입력하세요.");
+  if (!keyword) {
+    alert("키워드를 입력하세요.");
     return;
   }
 
-  $("apiBox").textContent = "검색 중...";
+  $("status").textContent = "검색 중...";
 
   try {
-    const vid = videoId(video);
-    const res = await fetch(`/api/search-rank?keyword=${encodeURIComponent(keyword)}&videoId=${encodeURIComponent(vid)}&regionCode=${region}`);
+    const res = await fetch(`/api/live-search?keyword=${encodeURIComponent(keyword)}&regionCode=${region}`);
     const data = await res.json();
 
     if (!res.ok) {
+      $("status").textContent = "오류 발생";
       alert(data.error || "API 오류");
       return;
     }
 
-    $("apiBox").textContent = "검색 완료";
-    $("rankBox").textContent = data.found ? `${data.rank}위` : "50위 안에 없음";
+    $("status").textContent = `${region} / "${keyword}" 라이브 ${data.count}개 검색됨 / 10초마다 자동 새로고침`;
 
-    $("results").innerHTML = data.results.map(x => `
-      <div>
-        <b>${x.rank}위</b> ${x.title}<br>
-        <small>${x.channelTitle}</small>
+    $("results").innerHTML = data.results.map(v => `
+      <div class="card">
+        <div class="rank">${v.rank}위</div>
+        <img src="${v.thumbnail}" class="thumb">
+        <div class="info">
+          <h3>${v.title}</h3>
+          <p>채널명: ${v.channelTitle}</p>
+          <p>동접자 수: ${Number(v.viewers).toLocaleString()}명</p>
+          <a href="${v.liveUrl}" target="_blank">라이브 보기</a>
+        </div>
       </div>
     `).join("");
 
   } catch (e) {
-    $("apiBox").textContent = "오류";
+    $("status").textContent = "검색 실패";
     alert(e.message);
   }
+}
+
+function startSearch() {
+  searchLive();
+
+  if (timer) clearInterval(timer);
+
+  timer = setInterval(() => {
+    searchLive();
+  }, 10000);
+}
+
+function stopSearch() {
+  if (timer) clearInterval(timer);
+  timer = null;
+  $("status").textContent = "자동 새로고침 중지됨";
 }
