@@ -2,28 +2,25 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>YouTube SEO</title>
+  <title>YouTube Live SEO</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>YouTube SEO Checker</h1>
+  <h1>YouTube Live SEO Checker</h1>
 
-  <input id="keyword" placeholder="키워드 입력">
-  <input id="video" placeholder="유튜브 영상 URL 또는 ID">
-  <select id="region">
-    <option value="KR">KR</option>
-    <option value="US">US</option>
-  </select>
+  <div class="box">
+    <input id="keyword" placeholder="라이브 키워드 입력 예: 먹방, 롤, 음악">
+    <select id="region">
+      <option value="KR">KR 한국</option>
+      <option value="US">US 미국</option>
+      <option value="JP">JP 일본</option>
+    </select>
+    <button onclick="startSearch()">검색 시작</button>
+    <button onclick="stopSearch()">자동 새로고침 중지</button>
+  </div>
 
-  <button onclick="runAll()">검색</button>
-
-  <p id="apiBox">대기</p>
-  <h2 id="rankBox"></h2>
-  <h2 id="scoreBox"></h2>
-
+  <p id="status">대기 중</p>
   <div id="results"></div>
-  <div id="checks"></div>
-  <div id="ideas"></div>
 
   <script src="script.js"></script>
 </body>
