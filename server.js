@@ -15,7 +15,21 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/api/live-search", async (req, res) => {
+function checkPassword(req, res, next) {
+  const password = req.headers["x-site-password"];
+
+  if (!process.env.SITE_PASSWORD) {
+    return res.status(500).json({ error: "SITE_PASSWORD가 설정되지 않았습니다." });
+  }
+
+  if (password !== process.env.SITE_PASSWORD) {
+    return res.status(401).json({ error: "비밀번호가 틀렸습니다." });
+  }
+
+  next();
+}
+
+app.get("/api/live-search", checkPassword, async (req, res) => {
   const { keyword, regionCode = "KR" } = req.query;
 
   if (!keyword) {
