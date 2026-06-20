@@ -6,29 +6,68 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>YouTube Live SEO Checker</h1>
+  <div class="bg-hearts"></div>
 
-  <div id="loginBox" class="box">
-    <input id="password" type="password" placeholder="비밀번호 입력">
-    <button onclick="login()">접속</button>
-  </div>
+  <main class="page">
+    <section class="left">
+      <div class="badge">💗 실시간 라이브 순위 추적 중</div>
 
-  <div id="appBox" style="display:none;">
-    <div class="box">
-      <input id="keyword" placeholder="라이브 키워드 입력 예: 먹방, 롤, 음악">
-      <select id="region">
-        <option value="KR">KR 한국</option>
-        <option value="US">US 미국</option>
-        <option value="JP">JP 일본</option>
-      </select>
-      <button onclick="startSearch()">검색 시작</button>
-      <button onclick="stopSearch()">자동 새로고침 중지</button>
-      <button onclick="logout()">로그아웃</button>
-    </div>
+      <header>
+        <div class="play">▶</div>
+        <div>
+          <h1>YouTube Live SEO</h1>
+          <p>♥ DASHBOARD ♥</p>
+        </div>
+      </header>
 
-    <p id="status">대기 중</p>
-    <div id="results"></div>
-  </div>
+      <div id="loginBox" class="panel login">
+        <h2>비밀번호 입력</h2>
+        <input id="password" type="password" placeholder="비밀번호 입력">
+        <button onclick="login()">접속</button>
+      </div>
+
+      <div id="appBox" style="display:none;">
+        <div class="panel search-panel">
+          <label>🌸 라이브 키워드 입력</label>
+          <div class="search-row">
+            <input id="keyword" placeholder="예: 먹방, 롤, 음악, 게임, 토크...">
+            <select id="region">
+              <option value="KR">KR 한국</option>
+              <option value="US">US 미국</option>
+              <option value="JP">JP 일본</option>
+            </select>
+            <button onclick="startSearch()">🔍 검색 시작</button>
+          </div>
+
+          <div class="notice">↻ 10초마다 자동으로 새로고침 됩니다 ♥</div>
+
+          <div class="sub-buttons">
+            <button onclick="stopSearch()">자동 새로고침 중지</button>
+            <button onclick="logout()">로그아웃</button>
+          </div>
+        </div>
+
+        <div class="title-row">
+          <h2>👑 실시간 라이브 TOP 50</h2>
+          <span id="status">대기 중</span>
+        </div>
+
+        <div id="results" class="results"></div>
+      </div>
+    </section>
+
+    <section class="right">
+      <div class="update-card">
+        <p>마지막 업데이트</p>
+        <strong id="clock">--:--:--</strong>
+      </div>
+
+      <div class="character-card">
+        <img src="sia.png" alt="sia character">
+        <div class="speech">시아를 사랑하는<br>물고기의 이야기 💗</div>
+      </div>
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
