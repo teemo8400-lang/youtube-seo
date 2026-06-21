@@ -93,11 +93,13 @@ app.get("/api/live-search", checkPassword, async (req, res) => {
       results
     });
   } catch (error) {
-    res.status(500).json({
-      error: "YouTube API 호출 실패",
-      detail: error.response?.data || error.message
-    });
-  }
+  console.error(error);
+
+  res.status(500).json({
+    error: "YouTube API 호출 실패",
+    detail: error.response?.data || error.message
+  });
+}
 });
 
 app.listen(PORT, () => {
