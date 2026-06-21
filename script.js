@@ -81,9 +81,6 @@ function startSearch() {
 
   if (timer) clearInterval(timer);
 
-  timer = setInterval(() => {
-    searchLive();
-  }, 10000);
 }
 
 function stopSearch() {
